@@ -49,7 +49,7 @@
                 //info={name:'Vinay Kumar', rollno:"B123444", group:'Anxiety/Sleep'}
                 var datestr=new Date().toLocaleDateString()
                 drawtext( 500, 20,datestr, timesRomanFont, 12, rgb(0, 0.53, 0.71))
-                drawtext( 45, 50,info.name, timesRomanFont, fontSize, rgb(0, 0.53, 0.71))
+                drawtext( 45, 50,info.name, timesRomanFont, 24, rgb(0, 0.53, 0.71))
                 drawtext( width-100, 50,info.rollno, timesRomanFont, 20)
                 drawtext( 50, 70,'Group: '+info.group, timesRomanFont, 12)
 
@@ -258,12 +258,12 @@
             if(headers[cell].toLowerCase().includes('happiness')) info.happiness=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('bmi')) info.bmi=sheet_row[cell];
 
-            if(headers[cell].toLowerCase().includes('panas')) info.panas=(sheet_row[cell] *100).toString() +"%"
+            if(headers[cell].toLowerCase().includes('panas')) info.panas=sheet_row[cell] .toString() +"%";
 
             if(headers[cell].toLowerCase().includes('class') && headers[cell].toLowerCase().includes('attendance')) info.class_attendance=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('lab') && headers[cell].toLowerCase().includes('attendance')) info.lab_attendance=sheet_row[cell];
             //if(headers[cell].toLowerCase().includes('quiz')) info.quiz=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('sattva')) info.sattva=(sheet_row[cell] *100).toString() +"%";
+            if(headers[cell].toLowerCase().includes('sattva')) info.sattva=sheet_row[cell] .toString() +"%";
 
 
             if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('post')) info.hrv_post=sheet_row[cell];
