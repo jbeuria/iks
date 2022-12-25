@@ -8,6 +8,9 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
         <script>
+
+
+
             const { PDFDocument, StandardFonts, rgb }  = PDFLib;
             //import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
             async function embedPdfPages(rollno)
@@ -57,42 +60,60 @@
                 drawtext( 50, 260,'Happiness Index: '+info.happiness, timesRomanFont, 12)
                 drawtext( 50, 290,'BMI: '+info.bmi, timesRomanFont, 12)
 
+                drawtext( 120, 290,'(Healthy: 18.5-25)', timesRomanFont, 12)
                 
                 drawtext(300, 140,'Class Attendance: '+info.class_attendance, timesRomanFont, 12)
                 drawtext( 300, 170,'Lab Attendance: '+info.lab_attendance, timesRomanFont, 12)
-                drawtext( 300, 200,'Quiz Marks: '+info.quiz, timesRomanFont, 12)
-                drawtext( 300, 230,'Sattav Guna: '+info.sattva, timesRomanFont, 12)
+                //drawtext( 300, 200,'Quiz Marks: '+info.quiz, timesRomanFont, 12)
+                drawtext( 300, 230,'Sattva Guna: '+info.sattva, timesRomanFont, 12)
                 drawtext( 300, 260,'PANAS: '+info.panas, timesRomanFont, 12)
                 
                 //if(info.hrv_post)
                 drawtext( 50, 320,'HRV (Post): '+info.hrv_post??"", timesRomanFont, 12)
+                var h=345;
 
-                if(info.deep_sleep || info.total_sleep || info.sleep_onset)
+                if(info.quiz)
                 {
-
-                    drawtext(50, 350,'Sleep Data: ', timesRomanFont, 18,rgb(1, 0, 0))
-
-                    drawtext(50, 370,'Date ', timesRomanFont, 15,rgb(0, 0, 1))
-                    drawtext(150, 370,'Deep Sleep', timesRomanFont, 15,rgb(0, 0, 1))
-                    drawtext(250, 370,'Total Sleep', timesRomanFont, 15,rgb(0, 0, 1))
-                    drawtext(350, 370,'Sleep Onset', timesRomanFont, 15,rgb(0, 0, 1))
-
-                    
-                    console.log(info.sleep_onset);
-                    for(var i = 0; i < info.sleep_date.length; i++)
-                    drawtext( 50, 390+i*20,info.sleep_date[i].toString(), timesRomanFont, 12)
-
-                    for(var i = 0; i < info.deep_sleep.length; i++)
-                    drawtext( 150, 390+i*20,info.deep_sleep[i].toString(), timesRomanFont, 12)
-
-                    for(var i = 0; i < info.total_sleep.length; i++)
-                    drawtext(250, 390+i*20,info.total_sleep[i].toString(), timesRomanFont, 12)
-
-                    for(var i = 0; i < info.sleep_onset.length; i++)
-                    drawtext( 350, 390+i*20,info.sleep_onset[i].toString(), timesRomanFont, 12)
+                    drawtext(50, h,'Quiz Results: ', timesRomanFont, 18,rgb(1, 0, 0))
+                    var j=0
+                    h+=20
+                    for(var i = 0; i < info.quiz.length; i++)
+                    {
+                        drawtext( 50 +j*100, h+( (i)%4 )*20,`Quiz-${i+1}`, timesRomanFont, 12)
+                        drawtext( 100 + j*100,h+( (i)%4 )*20,info.quiz[i].toString(), timesRomanFont, 12)
+                        if((i+1)%4==0)   j+=1.1;                        
+                    }   
                 }
 
-                drawtext( 50, 500,'Recommendations: ', timesRomanFont, 30)
+                h+=4*20+15;
+                if(info.deep_sleep || info.total_sleep || info.sleep_onset)
+                {
+                    drawtext(50, h,'Sleep Data: ', timesRomanFont, 18,rgb(1, 0, 0))
+                    drawtext(50, h+20,'Date ', timesRomanFont, 15,rgb(0, 0, 1))
+                    drawtext(150, h+20,'Deep Sleep', timesRomanFont, 15,rgb(0, 0, 1))
+                    drawtext(250, h+20,'Total Sleep', timesRomanFont, 15,rgb(0, 0, 1))
+                    drawtext(350, h+20,'Sleep Onset', timesRomanFont, 15,rgb(0, 0, 1))
+
+                    h+=40
+                    //console.log(info.sleep_onset);
+                    for(var i = 0; i < info.sleep_date.length; i++)
+                     drawtext( 50, h+i*20,info.sleep_date[i].toString(), timesRomanFont, 12)
+
+                    for(var i = 0; i < info.deep_sleep.length; i++)
+                    drawtext( 150, h+i*20,info.deep_sleep[i].toString(), timesRomanFont, 12)
+
+                    for(var i = 0; i < info.total_sleep.length; i++)
+                    drawtext(250, h+i*20,info.total_sleep[i].toString(), timesRomanFont, 12)
+
+                    for(var i = 0; i < info.sleep_onset.length; i++)
+                    drawtext( 350, h+i*20,info.sleep_onset[i].toString(), timesRomanFont, 12)
+
+                    h +=info.sleep_date.length*20;
+                }
+
+                
+                drawtext( 50, h+30,'Recommendations: ', timesRomanFont, 30)
+
                 
                 // Serialize the PDFDocument to bytes (a Uint8Array)
                 const pdfBytes = await pdfDoc.save()
@@ -212,6 +233,11 @@
     
     });
     
+    const secToTime = (seconds, locale='en') => {
+                const date = new Date(0);
+                date.setHours(0, 0, seconds, 0);
+                return date.toLocaleTimeString(locale);
+    }
     function getStudentInfo(sheet_row,headers)
     {
 
@@ -232,12 +258,12 @@
             if(headers[cell].toLowerCase().includes('happiness')) info.happiness=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('bmi')) info.bmi=sheet_row[cell];
 
-            if(headers[cell].toLowerCase().includes('panas')) info.panas=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('panas')) info.panas=(sheet_row[cell] *100).toString() +"%"
 
             if(headers[cell].toLowerCase().includes('class') && headers[cell].toLowerCase().includes('attendance')) info.class_attendance=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('lab') && headers[cell].toLowerCase().includes('attendance')) info.lab_attendance=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('quiz')) info.quiz=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('sattva')) info.sattva=sheet_row[cell];
+            //if(headers[cell].toLowerCase().includes('quiz')) info.quiz=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('sattva')) info.sattva=(sheet_row[cell] *100).toString() +"%";
 
 
             if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('post')) info.hrv_post=sheet_row[cell];
@@ -250,9 +276,15 @@
                 if(!info.sleep_onset) info.sleep_onset=[];
 
                 if(headers[cell].toLowerCase().includes('date')) info.sleep_date.push(sheet_row[cell]??"NA");
-                if(headers[cell].toLowerCase().includes('deep')) info.deep_sleep.push(sheet_row[cell]??"NA");
+                if(headers[cell].toLowerCase().includes('deep')) info.deep_sleep.push((sheet_row[cell] *100).toString() +"%"??"NA");
                 if(headers[cell].toLowerCase().includes('total')) info.total_sleep.push(sheet_row[cell]??"NA");
-                if( headers[cell].toLowerCase().includes('onset')) info.sleep_onset.push(sheet_row[cell]??"NA");
+                if( headers[cell].toLowerCase().includes('onset')) info.sleep_onset.push(secToTime(sheet_row[cell]*24*3600)??"NA");
+            }
+
+            if(headers[cell].toLowerCase().includes('quiz'))
+            {
+                if(!info.quiz) info.quiz=[];
+                info.quiz.push(sheet_row[cell]??"NA");
             }
 
 
