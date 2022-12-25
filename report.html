@@ -37,7 +37,7 @@
                     color: color,
                     })
                 }
-                var info_str= localStorage.getItem(rollno);
+                var info_str= localStorage.getItem(rollno.toLowerCase());
                 var info=JSON.parse(info_str)
                 //console.log(info);
                 
@@ -186,7 +186,7 @@
                             if(cell==0)
                             {
                                 //console.log(json_str)
-                                btn_string=  `<a href='#' onclick="embedPdfPages(${student_info.rollno})" role='button' class="form-control btn btn-sm btn-primary">${sheet_data[row][cell]}</a>`
+                                btn_string=  `<a href='#' onclick="embedPdfPages('${student_info.rollno}')" role='button' class="form-control btn btn-sm btn-primary">${sheet_data[row][cell]}</a>`
                             }
                             //console.log(btn_string);
                             table_output += '<td>'+btn_string+'</td>';
