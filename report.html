@@ -14,7 +14,7 @@
                 // Create a new PDFDocument
                 const pdfDoc = await PDFDocument.create()
 
-                
+
                 // Embed the Times Roman font
                 const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
 
@@ -96,7 +96,7 @@
                 // Serialize the PDFDocument to bytes (a Uint8Array)
                 const pdfBytes = await pdfDoc.save()
                 // Trigger the browser to download the PDF document
-                var filename=!!info.rollno??"report";
+                var filename= info.rollno??"report";
 
                 download(pdfBytes, filename+".pdf", "application/pdf");
                 
