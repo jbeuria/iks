@@ -167,7 +167,7 @@
                     {
                         var student_info=getStudentInfo(sheet_data[row],info_headers)
                         console.log(student_info);
-                        localStorage.setItem(student_info.roll.toString().toLowerCase(), student_info);
+                        localStorage.setItem(student_info.rollno.toLowerCase(), student_info);
                     }
 
                     for(var cell = 0; cell < sheet_data[row].length; cell++)
