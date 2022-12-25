@@ -166,6 +166,7 @@
                     if(row>0)
                     {
                         var student_info=getStudentInfo(sheet_data[row],info_headers)
+                        console.log(student_info);
                         localStorage.setItem(student_info.roll.toString().toLowerCase(), student_info);
                     }
 
