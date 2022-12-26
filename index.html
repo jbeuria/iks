@@ -257,11 +257,14 @@
     document.addEventListener("DOMContentLoaded", function(event) {
       
       localStorage.clear();
-      loadExcelData();
-      var url_string=window.location.href;
-      var url = new URL(url_string);
-      var rollno = url.searchParams.get("r");
-      embedPdfPages(rollno)
+
+      loadExcelData().then(()=>{
+        var url_string=window.location.href;
+        var url = new URL(url_string);
+        var rollno = url.searchParams.get("r");
+        embedPdfPages(rollno)
+      })
+      
     });
 
     </script>
