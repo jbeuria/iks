@@ -10,6 +10,7 @@
         <script>
             const { PDFDocument, StandardFonts, rgb }  = PDFLib;
             //import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+
             async function embedPdfPages(rollno)
             {
                 // Create a new PDFDocument
@@ -46,27 +47,32 @@
                 //info={name:'Vinay Kumar', rollno:"B123444", group:'Anxiety/Sleep'}
                 var datestr=new Date().toLocaleDateString()
                 drawtext( 500, 20,datestr, timesRomanFont, 12, rgb(0, 0.53, 0.71))
-                drawtext( 45, 50,info.name, timesRomanFont, 24, rgb(0, 0.53, 0.71))
+                drawtext( 45, 50,info.name, timesRomanFont, 20, rgb(0, 0.53, 0.71))
                 drawtext( width-100, 50,info.rollno, timesRomanFont, 20)
                 drawtext( 50, 70,'Group: '+info.group, timesRomanFont, 12)
 
-                drawtext( 50, 140,'HRV (Baseline): '+info.hrv_baseline, timesRomanFont, 12)
-                drawtext( 50, 170,'Stress: '+info.stress, timesRomanFont, 12)
-                drawtext( 50, 200,'Anxiety: '+info.anxiety, timesRomanFont, 12)
-                drawtext( 50, 230,'Depression: '+info.depression, timesRomanFont, 12)
-                drawtext( 50, 260,'Happiness Index: '+info.happiness, timesRomanFont, 12)
-                drawtext( 50, 290,'BMI: '+info.bmi, timesRomanFont, 12)
+                drawtext( 50, 140,'HRV (Baseline): '+Number(info.hrv_baseline).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 170,'Stress: '+Number(info.stress).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 200,'Anxiety: '+Number(info.anxiety).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 230,'Depression: '+Number(info.depression).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 260,'Happiness Index: '+Number(info.happiness).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 290,'BMI: '+Number(info.bmi).toFixed(2), timesRomanFont, 12)
 
                 drawtext( 120, 290,'(Healthy: 18.5-25)', timesRomanFont, 12)
                 
                 drawtext(300, 140,'Class Attendance: '+info.class_attendance, timesRomanFont, 12)
-                drawtext( 300, 170,'Lab Attendance: '+info.lab_attendance, timesRomanFont, 12)
-                var guna_string=`(${info.guna.sattva},${info.guna.rajas},${info.guna.tamas})`;
-                drawtext( 300, 230,'Guna: '+guna_string, timesRomanFont, 12)
-                drawtext( 300, 260,'PANAS (+ve): '+info.panas, timesRomanFont, 12)
+                drawtext( 300, 160,'Lab Attendance: '+info.lab_attendance, timesRomanFont, 12)
+                drawtext( 300, 190,'Insomnia Index: '+info.insomnia, timesRomanFont, 12)
+                drawtext( 300, 210,'Internet Addiction: '+info.internet, timesRomanFont, 12)
+
+
+                var guna_string=`S: ${info.sattva},  R: ${info.rajas}, T: ${info.tamas}`;
+                drawtext( 300, 230,'Guna Index: '+guna_string, timesRomanFont, 12)
+                drawtext( 300, 260,'PANAS (+ve affect): '+info.panas, timesRomanFont, 12)
                 
                 //if(info.hrv_post)
-                drawtext( 50, 320,'HRV (Post): '+info.hrv_post??"", timesRomanFont, 12)
+                var hrv_post_str=info.hasOwnProperty('hrv_post')?info.hrv_post:"to be taken";
+                drawtext( 50, 320,'HRV (Post): '+hrv_post_str, timesRomanFont, 12)
                 var h=345;
 
                 if(info.quiz)
@@ -176,11 +182,14 @@
                 return date.toLocaleTimeString(locale);
     }
 
+
     function getStudentInfo(sheet_row,headers)
     {
 
         let info={};
 
+        //console.log(sheet_row);
+        //console.log(headers);
         for(var cell = 0; cell < sheet_row.length; cell++)
         {   
             if(headers[cell].toLowerCase().includes('name')) info.name=sheet_row[cell];
@@ -194,20 +203,28 @@
 
 
             if(headers[cell].toLowerCase().includes('happiness')) info.happiness=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('bmi')) info.bmi=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('bmi')) info.bmi=isNaN(sheet_row[cell])==false? sheet_row[cell].toString() :'not available';
 
-            if(headers[cell].toLowerCase().includes('panas')) info.panas=sheet_row[cell] .toString() +"%";
+            if(headers[cell].toLowerCase().includes('panas')) info.panas=sheet_row[cell].toString() +"%";
 
             if(headers[cell].toLowerCase().includes('class') && headers[cell].toLowerCase().includes('attendance')) info.class_attendance=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('lab') && headers[cell].toLowerCase().includes('attendance')) info.lab_attendance=sheet_row[cell];
             //if(headers[cell].toLowerCase().includes('quiz')) info.quiz=sheet_row[cell];
-            info.guna={};
-            if(headers[cell].toLowerCase().includes('sattva')) info.guna.sattva=sheet_row[cell] .toString() +"%";
-            if(headers[cell].toLowerCase().includes('rajas')) info.guna.rajas=sheet_row[cell] .toString() +"%";
-            if(headers[cell].toLowerCase().includes('tamas')) info.guna.tamas=sheet_row[cell] .toString() +"%";
+            //info.guna={sattva:'NA',rajas:'NA',tamas:'NA'};
+
+            if(headers[cell].toLowerCase().includes('sattva')) info.sattva=isNaN(sheet_row[cell])==false? sheet_row[cell].toFixed(2).toString() +"%":'NA';
+            if(headers[cell].toLowerCase().includes('rajas')) info.rajas=isNaN(sheet_row[cell])==false? sheet_row[cell].toFixed(2).toString() +"%":'NA';
+            if(headers[cell].toLowerCase().includes('tamas')) info.tamas=isNaN(sheet_row[cell])==false? sheet_row[cell].toFixed(2).toString() +"%":'NA';
+
+            if(headers[cell].toLowerCase().includes('insomnia')) 
+            info.insomnia=isNaN(sheet_row[cell])==false? sheet_row[cell].toFixed(2).toString() +"%":'NA';
+            
+            if(headers[cell].toLowerCase().includes('internet')) 
+            info.internet=isNaN(sheet_row[cell])==false? sheet_row[cell].toFixed(2).toString() +"%":'NA';
 
 
-            if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('post')) info.hrv_post=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('post')) 
+            info.hrv_post=isNaN(sheet_row[cell])==false? sheet_row[cell].toString():'NA';
 
             if(headers[cell].toLowerCase().includes('sleep'))
             {
@@ -217,7 +234,7 @@
                 if(!info.sleep_onset) info.sleep_onset=[];
 
                 if(headers[cell].toLowerCase().includes('date')) info.sleep_date.push(sheet_row[cell]??"NA");
-                if(headers[cell].toLowerCase().includes('deep')) info.deep_sleep.push((sheet_row[cell] *100).toString() +"%"??"NA");
+                if(headers[cell].toLowerCase().includes('deep')) info.deep_sleep.push((sheet_row[cell]).toString() +"%"??"NA");
                 if(headers[cell].toLowerCase().includes('total')) info.total_sleep.push(sheet_row[cell]??"NA");
                 if( headers[cell].toLowerCase().includes('onset')) info.sleep_onset.push(secToTime(sheet_row[cell]*24*3600)??"NA");
             }
