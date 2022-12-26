@@ -51,12 +51,12 @@
                 drawtext( width-100, 50,info.rollno, timesRomanFont, 20)
                 drawtext( 50, 70,'Group: '+info.group, timesRomanFont, 12)
 
-                drawtext( 50, 140,'HRV (Baseline): '+info.hrv_baseline, timesRomanFont, 12)
-                drawtext( 50, 170,'Stress: '+info.stress, timesRomanFont, 12)
-                drawtext( 50, 200,'Anxiety: '+info.anxiety, timesRomanFont, 12)
-                drawtext( 50, 230,'Depression: '+info.depression, timesRomanFont, 12)
-                drawtext( 50, 260,'Happiness Index: '+info.happiness, timesRomanFont, 12)
-                drawtext( 50, 290,'BMI: '+info.bmi, timesRomanFont, 12)
+                drawtext( 50, 140,'HRV (Baseline): '+Number(info.hrv_baseline).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 170,'Stress: '+Number(info.stress).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 200,'Anxiety: '+Number(info.anxiety).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 230,'Depression: '+Number(info.depression).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 260,'Happiness Index: '+Number(info.happiness).toFixed(2), timesRomanFont, 12)
+                drawtext( 50, 290,'BMI: '+Number(info.bmi).toFixed(2), timesRomanFont, 12)
 
                 drawtext( 120, 290,'(Healthy: 18.5-25)', timesRomanFont, 12)
                 
@@ -248,13 +248,13 @@
             if(headers[cell].toLowerCase().includes('roll')) info.rollno=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('group')) info.group=sheet_row[cell];
 
-            if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('baseline')) info.hrv_baseline=sheet_row[cell].toFixed(2);
-            if(headers[cell].toLowerCase().includes('stress')) info.stress=sheet_row[cell].toFixed(2);
-            if(headers[cell].toLowerCase().includes('anxiety')) info.anxiety=sheet_row[cell].toFixed(2);
-            if(headers[cell].toLowerCase().includes('depression')) info.depression=sheet_row[cell].toFixed(2);
+            if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('baseline')) info.hrv_baseline=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('stress')) info.stress=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('anxiety')) info.anxiety=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('depression')) info.depression=sheet_row[cell];
 
 
-            if(headers[cell].toLowerCase().includes('happiness')) info.happiness=sheet_row[cell].toFixed(2);
+            if(headers[cell].toLowerCase().includes('happiness')) info.happiness=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('bmi')) info.bmi=sheet_row[cell];
 
             if(headers[cell].toLowerCase().includes('panas')) info.panas=sheet_row[cell].toString() +"%";
@@ -278,7 +278,7 @@
                 if(!info.sleep_onset) info.sleep_onset=[];
 
                 if(headers[cell].toLowerCase().includes('date')) info.sleep_date.push(sheet_row[cell]??"NA");
-                if(headers[cell].toLowerCase().includes('deep')) info.deep_sleep.push((sheet_row[cell] *100).toString() +"%"??"NA");
+                if(headers[cell].toLowerCase().includes('deep')) info.deep_sleep.push((sheet_row[cell]).toString() +"%"??"NA");
                 if(headers[cell].toLowerCase().includes('total')) info.total_sleep.push(sheet_row[cell]??"NA");
                 if( headers[cell].toLowerCase().includes('onset')) info.sleep_onset.push(secToTime(sheet_row[cell]*24*3600)??"NA");
             }
