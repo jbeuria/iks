@@ -64,11 +64,11 @@
                 drawtext( 300, 170,'Lab Attendance: '+info.lab_attendance, timesRomanFont, 12)
                 //drawtext( 300, 200,'Quiz Marks: '+info.quiz, timesRomanFont, 12)
                 var guna_string=`(${info.guna.sattva},${info.guna.rajas},${info.guna.tamas})`;
-                drawtext( 300, 230,'Guna: '+guna_string, timesRomanFont, 12)
-                drawtext( 300, 260,'PANAS (+ve): '+info.panas, timesRomanFont, 12)
+                drawtext( 300, 230,'Guna Index: '+guna_string, timesRomanFont, 12)
+                drawtext( 300, 260,'PANAS (+ve affect): '+info.panas, timesRomanFont, 12)
                 
                 //if(info.hrv_post)
-                drawtext( 50, 320,'HRV (Post): '+info.hrv_post??"", timesRomanFont, 12)
+                drawtext( 50, 320,'HRV (Post): '+info.hasOwnProperty('hrv_post')?hrv_post:"to be taken", timesRomanFont, 12)
                 var h=345;
 
                 if(info.quiz)
@@ -248,20 +248,21 @@
             if(headers[cell].toLowerCase().includes('roll')) info.rollno=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('group')) info.group=sheet_row[cell];
 
-            if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('baseline')) info.hrv_baseline=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('stress')) info.stress=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('anxiety')) info.anxiety=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('depression')) info.depression=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('baseline')) info.hrv_baseline=sheet_row[cell].toFixed(2);
+            if(headers[cell].toLowerCase().includes('stress')) info.stress=sheet_row[cell].toFixed(2);
+            if(headers[cell].toLowerCase().includes('anxiety')) info.anxiety=sheet_row[cell].toFixed(2);
+            if(headers[cell].toLowerCase().includes('depression')) info.depression=sheet_row[cell].toFixed(2);
 
 
-            if(headers[cell].toLowerCase().includes('happiness')) info.happiness=sheet_row[cell];
+            if(headers[cell].toLowerCase().includes('happiness')) info.happiness=sheet_row[cell].toFixed(2);
             if(headers[cell].toLowerCase().includes('bmi')) info.bmi=sheet_row[cell];
 
-            if(headers[cell].toLowerCase().includes('panas')) info.panas=sheet_row[cell] .toString() +"%";
+            if(headers[cell].toLowerCase().includes('panas')) info.panas=sheet_row[cell].toFixed(2) .toString() +"%";
 
             if(headers[cell].toLowerCase().includes('class') && headers[cell].toLowerCase().includes('attendance')) info.class_attendance=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('lab') && headers[cell].toLowerCase().includes('attendance')) info.lab_attendance=sheet_row[cell];
             //if(headers[cell].toLowerCase().includes('quiz')) info.quiz=sheet_row[cell];
+            info.guna={};
             if(headers[cell].toLowerCase().includes('sattva')) info.guna.sattva=sheet_row[cell] .toString() +"%";
             if(headers[cell].toLowerCase().includes('rajas')) info.guna.rajas=sheet_row[cell] .toString() +"%";
             if(headers[cell].toLowerCase().includes('tamas')) info.guna.tamas=sheet_row[cell] .toString() +"%";
@@ -295,6 +296,8 @@
 
     }
 
+    
+    
     document.addEventListener("DOMContentLoaded", function(event) {
      localStorage.clear()
     });

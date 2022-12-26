@@ -61,8 +61,8 @@
                 
                 drawtext(300, 140,'Class Attendance: '+info.class_attendance, timesRomanFont, 12)
                 drawtext( 300, 170,'Lab Attendance: '+info.lab_attendance, timesRomanFont, 12)
-                //drawtext( 300, 200,'Quiz Marks: '+info.quiz, timesRomanFont, 12)
-                drawtext( 300, 230,'Sattva Guna: '+info.sattva, timesRomanFont, 12)
+                var guna_string=`(${info.guna.sattva},${info.guna.rajas},${info.guna.tamas})`;
+                drawtext( 300, 230,'Guna: '+guna_string, timesRomanFont, 12)
                 drawtext( 300, 260,'PANAS (+ve): '+info.panas, timesRomanFont, 12)
                 
                 //if(info.hrv_post)
@@ -175,6 +175,7 @@
                 date.setHours(0, 0, seconds, 0);
                 return date.toLocaleTimeString(locale);
     }
+
     function getStudentInfo(sheet_row,headers)
     {
 
@@ -200,7 +201,10 @@
             if(headers[cell].toLowerCase().includes('class') && headers[cell].toLowerCase().includes('attendance')) info.class_attendance=sheet_row[cell];
             if(headers[cell].toLowerCase().includes('lab') && headers[cell].toLowerCase().includes('attendance')) info.lab_attendance=sheet_row[cell];
             //if(headers[cell].toLowerCase().includes('quiz')) info.quiz=sheet_row[cell];
-            if(headers[cell].toLowerCase().includes('sattva')) info.sattva=sheet_row[cell] .toString() +"%";
+            info.guna={};
+            if(headers[cell].toLowerCase().includes('sattva')) info.guna.sattva=sheet_row[cell] .toString() +"%";
+            if(headers[cell].toLowerCase().includes('rajas')) info.guna.rajas=sheet_row[cell] .toString() +"%";
+            if(headers[cell].toLowerCase().includes('tamas')) info.guna.tamas=sheet_row[cell] .toString() +"%";
 
 
             if(headers[cell].toLowerCase().includes('hrv') && headers[cell].toLowerCase().includes('post')) info.hrv_post=sheet_row[cell];
@@ -231,6 +235,8 @@
 
     }
 
+    
+    
     document.addEventListener("DOMContentLoaded", function(event) {
       
       localStorage.clear();
