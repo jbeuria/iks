@@ -140,7 +140,7 @@
 
     async function loadExcelData()
     {
-        var url='/data/IKS\ reports.xlsx';
+        var url='/iks/data/IKS\ reports.xlsx';
         var arrayBuf=await fetch(url).then((res) => res.arrayBuffer());
 
         var reader = new FileReader();
