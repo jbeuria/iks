@@ -172,6 +172,7 @@
                     }    
                 }
             }
+            return sheet_data;
         }
     
     }
@@ -258,7 +259,8 @@
       
       localStorage.clear();
 
-      loadExcelData().then(()=>{
+      loadExcelData().then(resp=>{
+        console.log(resp);
         var url_string=window.location.href;
         var url = new URL(url_string);
         var rollno = url.searchParams.get("r");
