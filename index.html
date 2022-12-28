@@ -172,7 +172,7 @@
                     }    
                 }
             }
-            return sheet_data;
+            //return sheet_data;
         }
     
     }
@@ -255,18 +255,13 @@
 
     
     
-    document.addEventListener("DOMContentLoaded", function(event) {
-      
-      localStorage.clear();
-
-      loadExcelData().then(resp=>{
-        console.log(resp);
+    document.addEventListener("DOMContentLoaded", async function(event) { 
+        localStorage.clear();
+        await loadExcelData();
         var url_string=window.location.href;
         var url = new URL(url_string);
         var rollno = url.searchParams.get("r");
-        embedPdfPages(rollno)
-      })
-      
+        await embedPdfPages(rollno);
     });
 
     </script>
