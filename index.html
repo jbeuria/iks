@@ -41,16 +41,12 @@
                     })
                 }
 
-                for (let i = 0; i < localStorage.length; i++) {
-                   let key=localStorage.key(i)
-                   console.log(key)
-                   console.log(localStorage.getItem(key));
-                }
-
-                var info_str= localStorage.getItem(rollno.toLowerCase());
-                console.log(info_str);
-                var info=JSON.parse(info_str)
-                console.log(info);
+                
+                //var info_str= localStorage.getItem(rollno.toLowerCase());
+                //console.log(info_str);
+                //var info=JSON.parse(info_str)
+                //console.log(info);
+                let info=findExcelData(rollno.toLowerCase())
                 
                 //info={name:'Vinay Kumar', rollno:"B123444", group:'Anxiety/Sleep'}
                 var datestr=new Date().toLocaleDateString()
@@ -184,6 +180,44 @@
         }
     
     }
+
+    async function findExcelData(key)
+    {
+        var url='/iks/data/IKS\ reports.xlsx';
+        var arrayBuf=await fetch(url).then((res) => res.arrayBuffer());
+
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(new Blob([arrayBuf]));
+    
+        reader.onload = function(event){
+    
+            var data = new Uint8Array(reader.result);
+    
+            var work_book = XLSX.read(data, {type:'array'});
+    
+            var sheet_name = work_book.SheetNames;
+    
+            var sheet_data = XLSX.utils.sheet_to_json(work_book.Sheets[sheet_name[0]], {header:1});
+    
+            localStorage.clear();
+            if(sheet_data.length > 0)
+            { 
+                var info_headers=sheet_data[0];
+                
+                for(var row = 0; row < sheet_data.length; row++)
+                {   
+                    if(row>0)
+                    {
+                        var student_info=getStudentInfo(sheet_data[row],info_headers)
+                        if(key.toLowerCase()==student_info.rollno.toLowerCase()) 
+                        return student_info;
+                    }    
+                }
+            }
+            return {};
+        }
+    
+    }
     
     const secToTime = (seconds, locale='en') => {
                 const date = new Date(0);
@@ -265,7 +299,6 @@
     
     document.addEventListener("DOMContentLoaded", async function(event) { 
         localStorage.clear();
-        await loadExcelData();
         var url_string=window.location.href;
         var url = new URL(url_string);
         var rollno = url.searchParams.get("r");
