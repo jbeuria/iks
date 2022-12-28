@@ -47,7 +47,7 @@
                 //var info=JSON.parse(info_str)
                 //console.log(info);
                 let info=findExcelData(rollno.toLowerCase())
-                
+
                 //info={name:'Vinay Kumar', rollno:"B123444", group:'Anxiety/Sleep'}
                 var datestr=new Date().toLocaleDateString()
                 drawtext( 500, 20,datestr, timesRomanFont, 12, rgb(0, 0.53, 0.71))
@@ -189,6 +189,7 @@
         var reader = new FileReader();
         reader.readAsArrayBuffer(new Blob([arrayBuf]));
     
+        let student_info={};
         reader.onload = function(event){
     
             var data = new Uint8Array(reader.result);
@@ -208,14 +209,14 @@
                 {   
                     if(row>0)
                     {
-                        var student_info=getStudentInfo(sheet_data[row],info_headers)
+                        student_info=getStudentInfo(sheet_data[row],info_headers)
                         if(key.toLowerCase()==student_info.rollno.toLowerCase()) 
-                        return student_info;
+                        break;
                     }    
                 }
             }
-            return {};
         }
+        return student_info;
     
     }
     
