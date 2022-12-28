@@ -11,7 +11,7 @@
             const { PDFDocument, StandardFonts, rgb }  = PDFLib;
             //import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
-            async function embedPdfPages(rollno)
+            async function embedPdfPages(info)
             {
                 // Create a new PDFDocument
                 const pdfDoc = await PDFDocument.create()
@@ -46,7 +46,7 @@
                 //console.log(info_str);
                 //var info=JSON.parse(info_str)
                 //console.log(info);
-                let info=findExcelData(rollno.toLowerCase())
+               // let info=findExcelData(rollno.toLowerCase())
 
                 //info={name:'Vinay Kumar', rollno:"B123444", group:'Anxiety/Sleep'}
                 var datestr=new Date().toLocaleDateString()
@@ -142,16 +142,20 @@
 
 <script>
 
-    async function loadExcelData()
+    async function findExcelData()
     {
-        var url='/iks/data/IKS\ reports.xlsx';
+        var url='/data/IKS\ reports.xlsx'; //'/iks/data/IKS\ reports.xlsx';
         var arrayBuf=await fetch(url).then((res) => res.arrayBuffer());
 
         var reader = new FileReader();
         reader.readAsArrayBuffer(new Blob([arrayBuf]));
-    
+
         reader.onload = function(event){
     
+            var url_string=window.location.href;
+            var url = new URL(url_string);
+            var rollno = url.searchParams.get("r");
+
             var data = new Uint8Array(reader.result);
     
             var work_book = XLSX.read(data, {type:'array'});
@@ -170,53 +174,16 @@
                     if(row>0)
                     {
                         var student_info=getStudentInfo(sheet_data[row],info_headers)
-                        //console.log(student_info);
-                        if(student_info.rollno)
-                        localStorage.setItem(student_info.rollno.toLowerCase(), JSON.stringify(student_info));
-                    }    
-                }
-            }
-            //return sheet_data;
-        }
-    
-    }
+                        if(rollno.toLowerCase()==student_info.rollno.toLowerCase()) 
+                        {
+                            embedPdfPages(student_info);
+                            break;
+                        }
 
-    async function findExcelData(key)
-    {
-        var url='/iks/data/IKS\ reports.xlsx';
-        var arrayBuf=await fetch(url).then((res) => res.arrayBuffer());
-
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(new Blob([arrayBuf]));
-    
-        let student_info={};
-        reader.onload = function(event){
-    
-            var data = new Uint8Array(reader.result);
-    
-            var work_book = XLSX.read(data, {type:'array'});
-    
-            var sheet_name = work_book.SheetNames;
-    
-            var sheet_data = XLSX.utils.sheet_to_json(work_book.Sheets[sheet_name[0]], {header:1});
-    
-            localStorage.clear();
-            if(sheet_data.length > 0)
-            { 
-                var info_headers=sheet_data[0];
-                
-                for(var row = 0; row < sheet_data.length; row++)
-                {   
-                    if(row>0)
-                    {
-                        student_info=getStudentInfo(sheet_data[row],info_headers)
-                        if(key.toLowerCase()==student_info.rollno.toLowerCase()) 
-                        break;
                     }    
                 }
             }
         }
-        return student_info;
     
     }
     
@@ -296,14 +263,10 @@
 
     }
 
-    
-    
+       
     document.addEventListener("DOMContentLoaded", async function(event) { 
         localStorage.clear();
-        var url_string=window.location.href;
-        var url = new URL(url_string);
-        var rollno = url.searchParams.get("r");
-        await embedPdfPages(rollno);
+        await findExcelData();
     });
 
     </script>
